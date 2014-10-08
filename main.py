@@ -1,18 +1,15 @@
-from flask import Flask
-app = Flask(__name__)
-app.config['DEBUG'] = True
 
-# Note: We don't need to call run() since our application is embedded within
-# the App Engine WSGI application server.
+import webapp2
+import json
 
+class MainPage(webapp2.RequestHandler):
+    def post(self):
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json.dumps({"location": { "lat": 37.4133, "lng": -122.081, "accurancy": 42}}))
 
-@app.route('/')
-def hello():
-    """Return a friendly HTTP greeting."""
-    return 'Hello World!'
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.write("fake geolocation testing service")
 
+app = webapp2.WSGIApplication([('/', MainPage),], debug=True)
 
-@app.errorhandler(404)
-def page_not_found(e):
-    """Return a custom 404 error."""
-    return 'Sorry, nothing at this URL.', 404
